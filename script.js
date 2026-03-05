@@ -1,6 +1,4 @@
 function ruler() {
-  // Ruler
-  // / height selector
   document.addEventListener("DOMContentLoaded", () => {
     const viewport = document.getElementById("rulerViewport");
     const content = document.getElementById("rulerContent");
@@ -13,18 +11,16 @@ function ruler() {
 
     if (!viewport) return;
 
-    // ── config ───────────────────────────────────────────────
     const PX_PER_INCH = 12;
     const PX_PER_CM = PX_PER_INCH / 2.54;
     const CFG = {
-      ft: { min: 48, max: 84, px: PX_PER_INCH }, // 4 ft – 7 ft (in inches)
-      cm: { min: 120, max: 220, px: PX_PER_CM }, // 120 – 220 cm
+      ft: { min: 48, max: 84, px: PX_PER_INCH },
+      cm: { min: 120, max: 220, px: PX_PER_CM },
     };
     let unit = "ft";
     let snapTimer = null;
     let lastTick = null;
 
-    // ── Web Audio tick ────────────────────────────────────────
     let audioCtx = null;
     function ensureAudio() {
       if (!audioCtx)
@@ -50,7 +46,6 @@ function ruler() {
       } catch (_) {}
     }
 
-    // ── build ticks ───────────────────────────────────────────
     function buildRuler(u) {
       const c = CFG[u];
       const pad = viewport.clientHeight / 2;
@@ -100,7 +95,6 @@ function ruler() {
       content.appendChild(frag);
     }
 
-    // ── update value display ──────────────────────────────────
     function updateDisplay() {
       const c = CFG[unit];
       const raw = c.min + viewport.scrollTop / c.px;
@@ -130,7 +124,6 @@ function ruler() {
       }
     }
 
-    // ── snap ─────────────────────────────────────────────────
     function snap() {
       const c = CFG[unit];
       const raw = c.min + viewport.scrollTop / c.px;
@@ -139,7 +132,6 @@ function ruler() {
       viewport.scrollTo({ top: target, behavior: "smooth" });
     }
 
-    // ── scroll ───────────────────────────────────────────────
     let rafId = null;
     viewport.addEventListener(
       "scroll",
@@ -155,7 +147,6 @@ function ruler() {
       { passive: true },
     );
 
-    // ── pointer drag ──────────────────────────────────────────
     let dragging = false;
     let dragStartY = 0;
     let dragStartS = 0;
@@ -175,7 +166,7 @@ function ruler() {
 
     viewport.addEventListener("pointermove", (e) => {
       if (!dragging) return;
-      const delta = dragStartY - e.clientY; // drag up = higher value
+      const delta = dragStartY - e.clientY;
       viewport.scrollTop = dragStartS + delta;
     });
 
@@ -190,7 +181,6 @@ function ruler() {
     viewport.addEventListener("pointerup", stopDrag);
     viewport.addEventListener("pointercancel", stopDrag);
 
-    // ── unit switch ───────────────────────────────────────────
     function switchUnit(u, defaultVal) {
       unit = u;
       lastTick = null;
@@ -206,7 +196,6 @@ function ruler() {
       if (radioFt.checked) switchUnit("ft", 67);
     });
 
-    // ── init ─────────────────────────────────────────────────
     radioFt.checked = true;
     switchUnit("ft", 67);
 
@@ -218,7 +207,6 @@ function ruler() {
 }
 
 function weightRuler() {
-  // Horizontal weight ruler selector
   document.addEventListener("DOMContentLoaded", () => {
     const viewport = document.getElementById("weightViewport");
     const content = document.getElementById("weightContent");
@@ -229,9 +217,8 @@ function weightRuler() {
 
     if (!viewport) return;
 
-    // ── config ───────────────────────────────────────────────
     const PX_PER_KG = 14;
-    const PX_PER_LB = PX_PER_KG * 0.453592; // ~6.35 px/lb
+    const PX_PER_LB = PX_PER_KG * 0.453592;
     const CFG = {
       kg: { min: 30, max: 200, px: PX_PER_KG },
       lb: { min: 66, max: 440, px: PX_PER_LB },
@@ -240,7 +227,6 @@ function weightRuler() {
     let snapTimer = null;
     let lastTick = null;
 
-    // ── Web Audio tick ────────────────────────────────────────
     let audioCtx = null;
     function ensureAudio() {
       if (!audioCtx)
@@ -266,7 +252,6 @@ function weightRuler() {
       } catch (_) {}
     }
 
-    // ── build ticks (horizontal) ──────────────────────────────
     function buildRuler(u) {
       const c = CFG[u];
       const pad = viewport.clientWidth / 2;
@@ -296,7 +281,6 @@ function weightRuler() {
       content.appendChild(frag);
     }
 
-    // ── update value display ──────────────────────────────────
     function updateDisplay() {
       const c = CFG[unit];
       const raw = c.min + viewport.scrollLeft / c.px;
@@ -310,7 +294,6 @@ function weightRuler() {
       }
     }
 
-    // ── snap ─────────────────────────────────────────────────
     function snap() {
       const c = CFG[unit];
       const raw = c.min + viewport.scrollLeft / c.px;
@@ -319,7 +302,6 @@ function weightRuler() {
       viewport.scrollTo({ left: target, behavior: "smooth" });
     }
 
-    // ── scroll ───────────────────────────────────────────────
     let rafId = null;
     viewport.addEventListener(
       "scroll",
@@ -335,7 +317,6 @@ function weightRuler() {
       { passive: true },
     );
 
-    // ── pointer drag (horizontal) ──────────────────────────────
     let dragging = false;
     let dragStartX = 0;
     let dragStartS = 0;
@@ -355,7 +336,7 @@ function weightRuler() {
 
     viewport.addEventListener("pointermove", (e) => {
       if (!dragging) return;
-      const delta = dragStartX - e.clientX; // drag left = lower, drag right = higher
+      const delta = dragStartX - e.clientX;
       viewport.scrollLeft = dragStartS + delta;
     });
 
@@ -493,7 +474,82 @@ function loadBMICategories() {
   bmiCategories.innerHTML = categoryCards;
 }
 
+function viewHistory() {
+  loadHistory();
+  const screens = ["landing", "steps", "result"];
+  const current =
+    screens.find((id) =>
+      document.getElementById(id).classList.contains("active"),
+    ) || "landing";
+  nextStep(current, "history");
+}
+
+function loadHistory() {
+  const saved = JSON.parse(localStorage.getItem("historyBMI") || "[]");
+  const list = document.getElementById("history-list");
+
+  if (saved.length === 0) {
+    list.innerHTML = `<div class="history-empty"><p>No history yet. Calculate your BMI to get started.</p></div>`;
+    return;
+  }
+
+  list.innerHTML = saved
+    .map((item, i) => {
+      const colors = {
+        Underweight: "#60a5fa",
+        "Normal weight": "#00ff91",
+        Overweight: "#fbbf24",
+        Obese: "#f87171",
+      };
+      const color = colors[item.category] || "#c6c6c6";
+      return `
+    <div class="history-card" id="history-card-${i}">
+      <div class="history-card-left">
+        <h3 class="history-bmi" style="color:${color}">${item.bmi}</h3>
+        <h3 class="history-category" style="color:${color}">${item.category}</h3>
+      </div>
+      <div class="history-card-info">
+        <p>Gender : ${item.gender ? item.gender.charAt(0).toUpperCase() + item.gender.slice(1) : "--"}</p>
+        <p>Height : ${item.height}</p>
+        <p>Weight : ${item.weight}</p>
+      </div>
+      <button class="btn delete" onclick="deleteHistoryItem(${i})">
+      Delete
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+          <path d="M10 11v6M14 11v6"/>
+          <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+        </svg>
+        
+      </button>
+    </div>`;
+    })
+    .join("");
+}
+
+function deleteHistoryItem(index) {
+  const saved = JSON.parse(localStorage.getItem("historyBMI") || "[]");
+  saved.splice(index, 1);
+  localStorage.setItem("historyBMI", JSON.stringify(saved));
+  historyData = saved;
+  loadHistory();
+}
+
 function goBack() {
+  if (document.getElementById("history").classList.contains("active")) {
+    nextStep("history", "landing");
+    return;
+  }
+
+  if (document.getElementById("result").classList.contains("active")) {
+    nextStep("result", "landing");
+    document.getElementById("step-height").classList.remove("active");
+    document.getElementById("step-weight").classList.remove("active");
+    document.getElementById("step-gender").classList.add("active");
+    return;
+  }
+
   const steps = ["step-gender", "step-height", "step-weight"];
   const active = steps.find((id) =>
     document.getElementById(id).classList.contains("active"),
@@ -525,28 +581,144 @@ form.addEventListener("submit", (e) => {
   nextStep("steps", "result");
 });
 
+let historyData = JSON.parse(localStorage.getItem("historyBMI") || "[]");
+
 function calculateBMI() {
   const formData = new FormData(form);
 
   const heightUnit = formData.get("height");
   const weightUnit = formData.get("weight");
 
-  const feet = document.getElementById("valueFeet").textContent;
-  const inches = document.getElementById("valueInches").textContent;
-  const weight = document.getElementById("weightValue").textContent;
+  const feetVal = document.getElementById("valueFeet").textContent;
+  const inchesVal = document.getElementById("valueInches").textContent;
+  const weightVal = document.getElementById("weightValue").textContent;
 
   const data = {
     gender: formData.get("gender"),
-    height: heightUnit === "ft" ? `${feet}ft ${inches}in` : `${feet}cm`,
+    height:
+      heightUnit === "ft" ? `${feetVal}ft ${inchesVal}in` : `${feetVal}cm`,
     heightUnit,
-    weight: `${weight}${weightUnit}`,
+    weight: `${weightVal}${weightUnit}`,
     weightUnit,
   };
 
-  const bmi = calculateBMIValue(feet, inches, weight, heightUnit, weightUnit);
+  const bmi = calculateBMIValue(
+    feetVal,
+    inchesVal,
+    weightVal,
+    heightUnit,
+    weightUnit,
+  );
   data.bmi = bmi.toFixed(1);
 
-  return data;
+  let category = "";
+  let categoryClass = "";
+  if (bmi < 18.5) {
+    category = "Underweight";
+    categoryClass = "category-underweight";
+  } else if (bmi < 25) {
+    category = "Normal weight";
+    categoryClass = "category-normal";
+  } else if (bmi < 30) {
+    category = "Overweight";
+    categoryClass = "category-overweight";
+  } else {
+    category = "Obese";
+    categoryClass = "category-obese";
+  }
+
+  data.category = category;
+
+  historyData.push(data);
+  localStorage.setItem("historyBMI", JSON.stringify(historyData));
+
+  const bmiRounded = bmi.toFixed(1);
+  document.getElementById("bmiValue").textContent = bmiRounded;
+
+  const catEl = document.getElementById("bmiCategory");
+  catEl.textContent = category;
+  catEl.className = categoryClass;
+
+  drawSpeedometer(bmi);
+
+  form.reset();
+}
+
+function speedoPoint(bmiVal, r) {
+  const BMI_MIN = 10,
+    BMI_MAX = 40;
+  const clamped = Math.min(Math.max(bmiVal, BMI_MIN), BMI_MAX);
+  const angleDeg = 180 - ((clamped - BMI_MIN) / (BMI_MAX - BMI_MIN)) * 180;
+  const rad = (angleDeg * Math.PI) / 180;
+  return {
+    x: 200 + r * Math.cos(rad),
+    y: 200 - r * Math.sin(rad),
+    angleDeg,
+  };
+}
+
+function arcPath(bmiFrom, bmiTo, r) {
+  const p1 = speedoPoint(bmiFrom, r);
+  const p2 = speedoPoint(bmiTo, r);
+
+  return `M ${p1.x.toFixed(2)} ${p1.y.toFixed(2)} A ${r} ${r} 0 0 1 ${p2.x.toFixed(2)} ${p2.y.toFixed(2)}`;
+}
+
+function drawSpeedometer(bmiVal) {
+  const zones = [
+    { from: 10, to: 18.5, color: "#60a5fa" },
+    { from: 18.5, to: 25, color: "#00ff91" },
+    { from: 25, to: 30, color: "#fbbf24" },
+    { from: 30, to: 40, color: "#f87171" },
+  ];
+
+  const R = 164;
+  const zonesGroup = document.getElementById("speedoZones");
+  zonesGroup.innerHTML = "";
+
+  zones.forEach((z) => {
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", arcPath(z.from, z.to, R));
+    path.setAttribute("fill", "none");
+    path.setAttribute("stroke", z.color);
+    path.setAttribute("stroke-width", "34");
+    path.setAttribute("stroke-linecap", "butt");
+    path.setAttribute("opacity", "1");
+    zonesGroup.appendChild(path);
+  });
+
+  const needleColor =
+    bmiVal < 18.5
+      ? "#60a5fa"
+      : bmiVal < 25
+        ? "#00ff91"
+        : bmiVal < 30
+          ? "#fbbf24"
+          : "#f87171";
+
+  const needle = document.getElementById("speedoNeedle");
+  needle.setAttribute("stroke", needleColor);
+
+  const target = speedoPoint(bmiVal, 125);
+  const startX = 200 - 125;
+  const startY = 200;
+
+  let start = null;
+  const DURATION = 1200;
+
+  function animate(ts) {
+    if (!start) start = ts;
+    const progress = Math.min((ts - start) / DURATION, 1);
+
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const cx = startX + (target.x - startX) * eased;
+    const cy = startY + (target.y - startY) * eased;
+    needle.setAttribute("x2", cx.toFixed(2));
+    needle.setAttribute("y2", cy.toFixed(2));
+    if (progress < 1) requestAnimationFrame(animate);
+  }
+
+  requestAnimationFrame(animate);
 }
 
 function calculateBMIValue(feet, inches, weight, heightUnit, weightUnit) {

@@ -67,11 +67,7 @@
                 <path d="m12 5 7 7-7 7" />
               </svg>
             </button>
-            <button
-              type="button"
-              class="btn"
-              onclick="nextStep('landing', 'history')"
-            >
+            <button type="button" class="btn" onclick="viewHistory()">
               View History
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -122,11 +118,7 @@
           <h3>
             <a href="/index.html">Fit<i>Snap</i></a>
           </h3>
-          <button
-            type="button"
-            class="btn"
-            onclick="goBack()"
-          >
+          <button type="button" class="btn" onclick="goBack()">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"
@@ -159,6 +151,7 @@
                   id="gender-male"
                   name="gender"
                   value="male"
+                  required
                 />
                 <h6>Male</h6>
               </label>
@@ -168,6 +161,7 @@
                   id="gender-female"
                   name="gender"
                   value="female"
+                  required
                 />
                 <h6>Female</h6>
               </label>
@@ -177,6 +171,7 @@
                   id="gender-other"
                   name="gender"
                   value="other"
+                  required
                 />
                 <h6>Other</h6>
               </label>
@@ -215,11 +210,23 @@
           <div class="height-form container">
             <div class="height-options">
               <label for="height-cm" class="height-option">
-                <input type="radio" id="height-cm" name="height" value="cm" />
+                <input
+                  type="radio"
+                  id="height-cm"
+                  name="height"
+                  value="cm"
+                  required
+                />
                 <h6>CM</h6>
               </label>
               <label for="height-ft" class="height-option">
-                <input type="radio" id="height-ft" name="height" value="ft" />
+                <input
+                  type="radio"
+                  id="height-ft"
+                  name="height"
+                  value="ft"
+                  required
+                />
                 <h6>FT</h6>
               </label>
             </div>
@@ -270,11 +277,23 @@
           <div class="weight-form container">
             <div class="weight-options">
               <label for="weight-kg" class="weight-option">
-                <input type="radio" id="weight-kg" name="weight" value="kg" />
+                <input
+                  type="radio"
+                  id="weight-kg"
+                  name="weight"
+                  value="kg"
+                  required
+                />
                 <h6>KG</h6>
               </label>
               <label for="weight-lb" class="weight-option">
-                <input type="radio" id="weight-lb" name="weight" value="lb" />
+                <input
+                  type="radio"
+                  id="weight-lb"
+                  name="weight"
+                  value="lb"
+                  required
+                />
                 <h6>LB</h6>
               </label>
             </div>
@@ -319,7 +338,7 @@
           <h3>
             <a href="/index.html">Fit<i>Snap</i></a>
           </h3>
-          <button type="button" class="btn">
+          <button type="button" class="btn" onclick="goBack()">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"
@@ -338,6 +357,165 @@
             Back
           </button>
         </nav>
+
+        <div class="content">
+          <div class="speedometer-container">
+            <svg
+              id="speedometerSVG"
+              class="speedometer-svg"
+              viewBox="0 0 400 230"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <!-- Background track -->
+              <path
+                d="M 36 200 A 164 164 0 0 1 364 200"
+                fill="none"
+                stroke="#2a2a2a"
+                stroke-width="34"
+                stroke-linecap="butt"
+              />
+              <!-- Zone arcs rendered by JS -->
+              <g id="speedoZones"></g>
+              <!-- Needle -->
+              <line
+                id="speedoNeedle"
+                x1="200"
+                y1="200"
+                x2="75"
+                y2="200"
+                stroke="#ffffff"
+                stroke-width="3"
+                stroke-linecap="round"
+              />
+              <!-- Center hub -->
+              <circle cx="200" cy="200" r="8" fill="#ffffff" />
+              <circle cx="200" cy="200" r="4" fill="#111111" />
+              <!-- Scale labels -->
+              <text
+                x="20"
+                y="228"
+                fill="#888"
+                font-size="13"
+                text-anchor="middle"
+              >
+                10
+              </text>
+              <text
+                x="380"
+                y="228"
+                fill="#888"
+                font-size="13"
+                text-anchor="middle"
+              >
+                40
+              </text>
+              <text
+                x="200"
+                y="12"
+                fill="#888"
+                font-size="13"
+                text-anchor="middle"
+              >
+                25
+              </text>
+              <text
+                x="55"
+                y="46"
+                fill="#888"
+                font-size="13"
+                text-anchor="middle"
+              >
+                18.5
+              </text>
+              <text
+                x="345"
+                y="46"
+                fill="#888"
+                font-size="13"
+                text-anchor="middle"
+              >
+                30
+              </text>
+            </svg>
+            <div class="result-content">
+              <h2>Your BMI is <i id="bmiValue">22.5</i></h2>
+              <p id="bmiCategory">Normal weight</p>
+            </div>
+          </div>
+          <div class="cta">
+            <button
+              type="button"
+              class="btn primary"
+              onclick="calculateAgain()"
+            >
+              Calculate Again
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-arrow-right-icon lucide-arrow-right"
+              >
+                <path d="M5 12h14" />
+                <path d="m12 5 7 7-7 7" />
+              </svg>
+            </button>
+            <button type="button" class="btn" onclick="viewHistory()">
+              View History
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-undo2-icon lucide-undo-2"
+              >
+                <path d="M9 14 4 9l5-5" />
+                <path
+                  d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="history" class="screen">
+        <nav class="container">
+          <h3>
+            <a href="/index.html">Fit<i>Snap</i></a>
+          </h3>
+          <button type="button" class="btn" onclick="goBack()">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M19 12H5" />
+              <path d="m12 19-7-7 7-7" />
+            </svg>
+            Back
+          </button>
+        </nav>
+        <div class="history-page container">
+          <h2><i>BMI</i> History</h2>
+          <div id="history-list" class="history-list"></div>
+        </div>
       </section>
     </main>
 

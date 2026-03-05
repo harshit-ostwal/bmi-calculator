@@ -493,13 +493,88 @@ function loadBMICategories() {
   bmiCategories.innerHTML = categoryCards;
 }
 
-function nextStep() {}
+function goBack() {
+  const steps = ["step-gender", "step-height", "step-weight"];
+  const active = steps.find((id) =>
+    document.getElementById(id).classList.contains("active"),
+  );
 
-function previousStep() {}
+  if (!active || active === "step-gender") {
+    nextStep("steps", "landing");
+    nextStep("step-height", "step-gender");
+    nextStep("step-weight", "step-gender");
+    document.getElementById("step-gender").classList.add("active");
+  } else if (active === "step-height") {
+    nextStep("step-height", "step-gender");
+  } else if (active === "step-weight") {
+    nextStep("step-weight", "step-height");
+  }
+}
+
+function nextStep(current, next) {
+  document.getElementById(current).classList.remove("active");
+  document.getElementById(next).classList.add("active");
+}
+
+const form = document.getElementById("steps");
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  calculateBMI();
+  nextStep("steps", "result");
+});
+
+function calculateBMI() {
+  const formData = new FormData(form);
+
+  const heightUnit = formData.get("height");
+  const weightUnit = formData.get("weight");
+
+  const feet = document.getElementById("valueFeet").textContent;
+  const inches = document.getElementById("valueInches").textContent;
+  const weight = document.getElementById("weightValue").textContent;
+
+  const data = {
+    gender: formData.get("gender"),
+    height: heightUnit === "ft" ? `${feet}ft ${inches}in` : `${feet}cm`,
+    heightUnit,
+    weight: `${weight}${weightUnit}`,
+    weightUnit,
+  };
+
+  const bmi = calculateBMIValue(feet, inches, weight, heightUnit, weightUnit);
+  data.bmi = bmi.toFixed(1);
+
+  return data;
+}
+
+function calculateBMIValue(feet, inches, weight, heightUnit, weightUnit) {
+  let heightInMeters;
+  let weightInKg;
+
+  if (heightUnit === "ft") {
+    const totalInches = parseInt(feet) * 12 + parseInt(inches);
+    heightInMeters = totalInches * 0.0254;
+  }
+
+  if (heightUnit === "cm") {
+    heightInMeters = parseInt(feet) / 100;
+  }
+
+  if (weightUnit === "kg") {
+    weightInKg = parseInt(weight);
+  }
+
+  if (weightUnit === "lb") {
+    weightInKg = parseInt(weight) * 0.453592;
+  }
+
+  const bmi = weightInKg / (heightInMeters * heightInMeters);
+  return bmi;
+}
 
 loadFeatures();
 loadBMICategories();
-nextStep();
-previousStep();
 ruler();
 weightRuler();
